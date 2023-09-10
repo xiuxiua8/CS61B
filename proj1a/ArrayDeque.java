@@ -16,19 +16,21 @@ public class ArrayDeque<T> {
     private int size;
 
     /** Creates an empty array deque. */
-    public ArrayDeque(){
+    public ArrayDeque() {
         items = (T[]) new Object[8];
-        size = 0 ;
+        size = 0;
     }
 
+
     /** Creates a deep copy of other. */
-    public ArrayDeque(ArrayDeque other){
+    /* public ArrayDeque(ArrayDeque other) {
         items = (T[]) new Object[other.items.length];
-        for (int i = 0; i < other.items.length; i ++){
+        for (int i = 0; i < other.items.length; i++) {
             items[i] = (T) other.items[i];
         }
         size = other.size;
-    }
+    }*/
+
 
     /** Resizes the underlying array to the target capacity. */
     private void resize(int capacity) {
@@ -37,12 +39,12 @@ public class ArrayDeque<T> {
         items = a;
     }
     /** Adds an item of type T to the front of the deque.*/
-    public void addFirst(T item){
-        if (size == items.length){
+    public void addFirst(T item) {
+        if (size == items.length) {
             //this.resize(size + 1);
-            this.resize(size * 2);
+            this.resize(size + 1);
         }
-        for (int i = size; i > 0; i--){
+        for (int i = size; i > 0; i--) {
             items[i] = items[i-1];
         }
         items[0] = item;
@@ -51,21 +53,18 @@ public class ArrayDeque<T> {
 
     /** Inserts X into the back of the list. */
     public void addLast(T item) {
-        if (size == items.length){
+        if (size == items.length) {
             //this.resize(size + 1);
-            this.resize(size * 2);
+            this.resize(size + 1);
         }
         items[size] = item;
         size = size + 1;
     }
 
-    /** Returns the item from the back of the list. */
-    public T getLast() {
-        return items[size - 1];
-    }
+
     /** Returns true if deque is empty, false otherwise.*/
-    public boolean isEmpty(){
-        if (size == 0){
+    public boolean isEmpty() {
+        if (size == 0) {
             return true;
         }
         return false;
@@ -73,11 +72,11 @@ public class ArrayDeque<T> {
 
     /** Prints the items in the deque from first to last, separated by a space.
      * Once all the items have been printed, print out a new line.*/
-    public void printDeque(){
-        if (size == 0){
+    public void printDeque() {
+        if (size == 0) {
             System.out.println("The deque is empty.\n");
         }
-        for (int i = 0; i < size; i ++){
+        for (int i = 0; i < size; i++) {
             System.out.print(items[i] + " ");
         }
         System.out.print("\n");
@@ -95,21 +94,21 @@ public class ArrayDeque<T> {
     }
 
     /** Removes and returns the item at the front of the deque. If no such item exists, returns null. */
-    public T removeFirst(){
-        if (size == 0){
+    public T removeFirst() {
+        if (size == 0) {
             return null;
         }
         T front = get(0);
 
 
-        for (int i = 0; i < size; i++){
-            items[i] = items[i+1];
+        for (int i = 0; i < size - 1; i++) {
+            items[i] = items[i + 1];
         }
 
-        items[size - 1] = null;
+        items[size - 1] = null; //this may not right.
 
         size = size - 1;
-        if (size <= items.length * 0.25 && size > 16){
+        if (size <= items.length * 0.25 && size > 16) {
             resize((int) (items.length * 0.25));
         }
         return front;
@@ -118,42 +117,45 @@ public class ArrayDeque<T> {
     /** Deletes item from back of the list and
      * returns deleted item. */
     public T removeLast() {
-        if (size == 0){
+        if (size == 0) {
             return null;
         }
-        T back = getLast();
+        T back = get(size - 1);
         items[size - 1] = null;
         size = size - 1;
-        if (size <= items.length * 0.25 && size > 16){
+        if (size <= items.length * 0.25 && size > 16) {
             resize((int) (items.length * 0.25));
         }
         return back;
     }
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> ADeque = new ArrayDeque<>();
-        if (ADeque.isEmpty()){
-            System.out.println("ADeque is empty.");
+    /*public static void main(String[] args) {
+        ArrayDeque<Integer> aDeque = new ArrayDeque<>();
+        if (aDeque.isEmpty()) {
+            System.out.println("aDeque is empty.");
         }
-        //ADeque.addFirst(1);
-        ADeque.addLast(2);
-        if (ADeque.isEmpty()){
-            System.out.println("ADeque is empty.");
+        aDeque.addFirst(1);
+        aDeque.addLast(2);
+        if (aDeque.isEmpty()) {
+            System.out.println("aDeque is empty.");
         }
-        System.out.println(ADeque.size());
-        ADeque.addLast(3);
-        ADeque.addLast(4);
-        ADeque.addLast(5);
-        ADeque.printDeque();
-        ArrayDeque<Integer> LLD2 = new ArrayDeque<>(ADeque);
-        System.out.println(ADeque.get(4));
-        LLD2.printDeque();
-        ADeque.removeFirst();
-        ADeque.removeLast();
-        System.out.println(ADeque.size());
-        ADeque.printDeque();
-    }
-
+        System.out.println(aDeque.size());
+        aDeque.addLast(3);
+        aDeque.addLast(4);
+        aDeque.addLast(5);
+        aDeque.printDeque();
+        for (int i = 0; i < 17; i++){
+            aDeque.addFirst(i);
+        }
+        //ArrayDeque<Integer> aDeque2 = new ArrayDeque<>(aDeque);
+        System.out.println(aDeque.get(4));
+        //aDeque2.printDeque();
+        //System.out.println(aDeque.items.length);
+        aDeque.removeFirst();
+        aDeque.removeLast();
+        System.out.println(aDeque.size());
+        aDeque.printDeque();
+    }*/
 
 }
 
