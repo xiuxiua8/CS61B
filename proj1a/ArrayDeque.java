@@ -44,9 +44,10 @@ public class ArrayDeque<T> {
             //this.resize(size + 1);
             this.resize(size + 1);
         }
-        for (int i = size; i > 0; i--) {
-            items[i] = items[i-1];
-        }
+        //for (int i = size; i > 0; i--) {
+        //    items[i] = items[i -1 ];
+        //}
+        System.arraycopy(items, 0, items, 1, size);
         items[0] = item;
         size = size + 1;
     }
@@ -93,7 +94,8 @@ public class ArrayDeque<T> {
         return size;
     }
 
-    /** Removes and returns the item at the front of the deque. If no such item exists, returns null. */
+    /** Removes and returns the item at the front of the deque.
+     * If no such item exists, returns null. */
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -101,9 +103,11 @@ public class ArrayDeque<T> {
         T front = get(0);
 
 
-        for (int i = 0; i < size - 1; i++) {
-            items[i] = items[i + 1];
-        }
+        //for (int i = 0; i < size - 1; i++) {
+        //    items[i] = items[i + 1];
+        //}
+
+        System.arraycopy(items, 1, items, 0, size - 1);
 
         items[size - 1] = null; //this may not right.
 
