@@ -128,7 +128,7 @@ public class ArrayDeque<T> {
         items[size - 1] = null;
         size = size - 1;
         if (size <= items.length * 0.25 && size > 16) {
-            resize((int) (items.length * 0.25));
+            resize((int) (items.length * 0.25)+1);
         }
         return back;
     }
