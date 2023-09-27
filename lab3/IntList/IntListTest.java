@@ -78,16 +78,17 @@ public class IntListTest {
      That the method handles a null input properly.*/
     @Test//(timeout = 1000)
     public void testReverse() {
-        IntList A = IntList.of(1, 2, 3);
+        IntList A = IntList.of(1, 2, 3, 4);
         IntList p = A;
-        IntList B = IntList.of(1, 2, 3);
-        IntList C = IntList.of(3, 2, 1);
+        //IntList B = IntList.of(1, 2, 3);
+        IntList C = IntList.of(4, 3, 2, 1);
 
         A = IntList.reverse(A);
-        assertNotEquals(A, p);
+        assertTrue("pointer is not changed", A != p);
         assertEquals(A, C);
 
         IntList zero = new IntList();
+
         assertEquals(IntList.reverse(null), null);
 
     }
