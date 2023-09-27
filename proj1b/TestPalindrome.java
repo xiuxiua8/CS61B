@@ -31,25 +31,25 @@ public class TestPalindrome {
     }
     @Test
     public void testOffisPalindrome() {
-        OffByOne testword = new OffByOne();
-        assertEquals(true, testword.isPalindrome("flake"));
-        assertEquals(true, testword.isPalindrome("flame"));
-        assertEquals(true, testword.isPalindrome(""));
-        assertEquals(true, testword.isPalindrome("a"));
-        assertEquals(false, testword.isPalindrome("cat"));
-        assertEquals(true, testword.isPalindrome("&flame%"));
+        CharacterComparator testword = new OffByOne();
+        assertEquals(true, palindrome.isPalindrome("flake", testword));
+        assertEquals(true, palindrome.isPalindrome("flame", testword));
+        assertEquals(true, palindrome.isPalindrome("", testword));
+        assertEquals(true, palindrome.isPalindrome("a", testword));
+        assertEquals(false, palindrome.isPalindrome("cat", testword));
+        assertEquals(true, palindrome.isPalindrome("&flame%", testword));
 
     }
 
     @Test
     public void testOffNisPalindrome() {
-        OffByN testword = new OffByN(1);
-        assertEquals(true, testword.isPalindrome("flake"));
-        assertEquals(true, testword.isPalindrome("flame"));
-        assertEquals(true, testword.isPalindrome(""));
-        assertEquals(true, testword.isPalindrome("a"));
-        assertEquals(false, testword.isPalindrome("cat"));
-        assertEquals(true, testword.isPalindrome("&flame%"));
+        CharacterComparator testword = new OffByN(1);
+        assertEquals(true, palindrome.isPalindrome("flake", testword));
+        assertEquals(true, palindrome.isPalindrome("flame", testword));
+        assertEquals(true, palindrome.isPalindrome("", testword));
+        assertEquals(true, palindrome.isPalindrome("a", testword));
+        assertEquals(false, palindrome.isPalindrome("cat", testword));
+        assertEquals(true, palindrome.isPalindrome("&flame%", testword));
 
     }
 
