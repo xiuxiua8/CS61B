@@ -2,62 +2,55 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TestArrayDequeGold {
-
     @Test
-    public void testGold() {
-        StudentArrayDeque<Integer> sad1 = new StudentArrayDeque<>();
-        ArrayDequeSolution<Integer> sad2 = new ArrayDequeSolution<>();
-        int flag = 1; //this means that the Student's solution is right.
-        for (int i = 0; i < 100; i += 1) {
-            double numberBetweenZeroAndOne = StdRandom.uniform();
-
-            if (numberBetweenZeroAndOne < 0.5) {
-                sad1.addLast(i);
-                sad2.addLast(i);
-                if (sad1.size() == 0) {
-                    break;
-                }
-                if (sad2.removeLast() != sad1.removeFirst()) {
-                    flag = 0;
-                    break;
+    public void testStudentArrayDeque() {
+        StudentArrayDeque<Integer> testArray = new StudentArrayDeque<>();
+        ArrayDequeSolution<Integer> stdArray = new ArrayDequeSolution<>();
+        String log = "";
+        for (int i = 0; i < 1000; i++) {
+            if (stdArray.size() == 0) {
+                int addNumber = StdRandom.uniform(1000);
+                int headOrBack = StdRandom.uniform(2);
+                if (headOrBack == 0) {
+                    log = log + "addFirst(" + addNumber + ")\n";
+                    testArray.addFirst(addNumber);
+                    stdArray.addFirst(addNumber);
+                } else {
+                    log = log + "addLast(" + addNumber + ")\n";
+                    testArray.addLast(addNumber);
+                    stdArray.addLast(addNumber);
                 }
             } else {
-                sad1.addFirst(i);
-                sad2.addFirst(i);
-                if (sad1.size() == 0) {
-                    break;
+                int x = StdRandom.uniform(4);
+                int addNumber = StdRandom.uniform(1000);
+                Integer testremoveNumber = 1;
+                Integer stdremoveNumber = 1;
+                switch (x) {
+                    case 0:
+                        log = log + "addFirst(" + addNumber + ")\n";
+                        testArray.addFirst(addNumber);
+                        stdArray.addFirst(addNumber);
+                        break;
+                    case 1:
+                        log = log + "addLast(" + addNumber + ")\n";
+                        testArray.addLast(addNumber);
+                        stdArray.addLast(addNumber);
+                        break;
+                    case 2:
+                        log = log + "removeFirst()\n";
+                        testremoveNumber = testArray.removeFirst();
+                        stdremoveNumber = stdArray.removeFirst();
+                        break;
+                    case 3:
+                        log = log + "removeLast()\n";
+                        testremoveNumber = testArray.removeLast();
+                        stdremoveNumber = stdArray.removeLast();
+                        break;
+                    default:
                 }
-                if (sad2.removeFirst() != sad1.removeFirst()) {
-                    flag = 0;
-                    break;
-                }
-            }
-
-        }
-        sad1.printDeque();
-        //sad2.printDeque();
-        assertEquals(1, flag);
-
-        for (int i = 0; i < 10; i += 1) {
-            double numberBetweenZeroAndOne = StdRandom.uniform();
-
-            if (numberBetweenZeroAndOne < 0.5) {
-                sad1.addFirst(i);
-                sad2.addFirst(i);
-            }
-            else {
-                sad1.addLast(i);
-                sad2.addFirst(i);
+                assertEquals(log, stdremoveNumber, testremoveNumber);
             }
         }
-        for (int i = 0; i < 10; i += 1) {
-            //assertEquals(sad1.removeFirst(),sad2.removeFirst());
-            Integer actual = sad1.removeFirst();
-            Integer expected = sad2.removeFirst();
-            assertEquals("Oh noooo!\nThis is bad:\n   Random number " + actual
-                            + " not equal to " + expected + "!",
-                    expected, actual);
 
-        }
     }
 }
