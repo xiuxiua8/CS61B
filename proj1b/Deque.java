@@ -18,7 +18,8 @@ public interface Deque<Item> {
     void printDeque();
 
 
-    /** Removes and returns the item at the front of the deque. If no such item exists, returns null.*/
+    /** Removes and returns the item at the front of the deque.
+     * If no such item exists, returns null.*/
     Item removeFirst();
 
 
