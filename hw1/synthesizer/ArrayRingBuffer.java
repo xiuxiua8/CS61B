@@ -27,7 +27,7 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
         }
         if (last >= capacity) {
             last -= capacity;
-            //throw new RuntimeException("Ring buffer overflow");
+            throw new RuntimeException("Ring buffer overflow");
 
         }
         if (fillCount > capacity) {
@@ -41,10 +41,14 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
      * covered Monday.
      */
     public void enqueue(T x) {
-        rb[last] = x;
-        last += 1;
-        fillCount += 1;
-        indexcheck();
+        try {
+            rb[last] = x;
+            last += 1;
+            fillCount += 1;
+            indexcheck();
+        } catch (RuntimeException e) {
+            System.out.println("Tried to run: " + e);
+        }
     }
 
     /**
@@ -54,24 +58,33 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
      */
     public T dequeue() {
         T returnfirst = rb[first];
-        if (returnfirst == null) {
-            throw new RuntimeException("Ring buffer underflow");
+        try {
+            if (returnfirst == null) {
+                throw new RuntimeException("Ring buffer underflow");
+            }
+            first += 1;
+            fillCount -= 1;
+            indexcheck();
+            return returnfirst;
+        } catch (RuntimeException e) {
+            System.out.println("Tried to run: " + e);
+            return null;
         }
-        first += 1;
-        fillCount -= 1;
-        indexcheck();
-        return returnfirst;
     }
 
     /**
      * Return oldest item, but don't remove it.
      */
     public T peek() {
-        T returnfirst = rb[first];
-        if (returnfirst == null) {
-            throw new RuntimeException("Ring buffer is empty");
+        try {
+            if (this.fillCount == 0) {
+                throw new RuntimeException("Ring buffer is empty");
+            }
+            return rb[first];
+        } catch (RuntimeException e) {
+            System.out.println("Tried to run: " + e);
+            return null;
         }
-        return returnfirst;
     }
 
     @Override

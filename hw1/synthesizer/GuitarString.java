@@ -1,8 +1,4 @@
 package synthesizer;
-import java.util.Iterator;
-import java.util.stream.BaseStream;
-import static java.lang.Math.round;
-
 
 //Make sure this class is public
 public class GuitarString {
