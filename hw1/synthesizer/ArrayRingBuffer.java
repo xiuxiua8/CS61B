@@ -59,7 +59,7 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
     public T dequeue() {
         T returnfirst = rb[first];
         try {
-            if (returnfirst == null) {
+            if (this.isEmpty()) {
                 throw new RuntimeException("Ring buffer underflow");
             }
             first += 1;
@@ -77,7 +77,7 @@ public class ArrayRingBuffer<T>  extends AbstractBoundedQueue<T> {
      */
     public T peek() {
         try {
-            if (this.fillCount == 0) {
+            if (this.isEmpty()) {
                 throw new RuntimeException("Ring buffer is empty");
             }
             return rb[first];
