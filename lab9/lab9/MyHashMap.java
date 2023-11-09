@@ -1,5 +1,6 @@
 package lab9;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     private ArrayMap<K, V>[] buckets;
     private int size;
+    private Set<K> keyset = new HashSet<>();
+
 
     private int loadFactor() {
         return size / buckets.length;
@@ -53,19 +56,40 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int index = Math.floorMod(hash(key), DEFAULT_SIZE);
+//        for (K stuff : buckets[index]) {
+//
+//        }
+        if (buckets[index].size == 0) {
+            return null;
+        } else {
+            return buckets[index].get(key);
+        }
+        //throw new UnsupportedOperationException();
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        int index = Math.floorMod(hash(key), DEFAULT_SIZE);
+        if (keySet().contains(key)) {
+            size -= 1;
+        } else {
+            keyset.add(key);
+        }
+        buckets[index].put(key, value);
+        size += 1;
+        if (loadFactor() >= MAX_LF) {
+            //resize();
+        }
+        //throw new UnsupportedOperationException();
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
+        //throw new UnsupportedOperationException();
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
@@ -73,7 +97,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        //for (: buckets)
+        return keyset;
+        //throw new UnsupportedOperationException();
     }
 
     /* Removes the mapping for the specified key from this map if exists.
