@@ -56,13 +56,51 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     /** go to the right node, then return that node
      * */
     private Node gotothebottom (Node node, K key) {
-        Node nd = node;
-        while (go(nd, key) != null) {
-            nd = gotothebottom(go(nd, key), key);
+        Node ndptr = node;
+        while (go(ndptr, key) != null) {
+            ndptr = gotothebottom(go(ndptr, key), key);
         }
         //System.out.println("1");
-        return nd;
+        return ndptr;
     }
+
+    private Node gotoparentnode (Node node, Node cnode, K key) {
+        Node ndptr = node;
+        while (go(ndptr, key) != cnode) {
+            if (go(ndptr, key) == null) {
+                return null;
+            }
+            ndptr = gotoparentnode(go(ndptr, key), cnode, key);
+        }
+        //System.out.println("1");
+        return ndptr;
+    }
+
+    private Node gotoleft (Node node) {
+        Node ndptr = node.left;
+        if (ndptr == null) {
+            return null;
+        } else {
+            while (ndptr.right != null) {
+                ndptr = ndptr.right;
+            }
+            return ndptr;
+        }
+    }
+
+    private Node gotoright (Node node) {
+        Node ndptr = node.right;
+        if (ndptr == null) {
+            return null;
+        } else {
+            while (ndptr.left != null) {
+                ndptr = ndptr.left;
+            }
+            return ndptr;
+        }
+    }
+
+
 
     private Node find(Node T, K sk) {
         if (T == null) {
@@ -169,6 +207,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V remove(K key) {
+        int LR = 0;
         if (root == null) {
             return null;
         }
@@ -176,10 +215,64 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (!node.key.equals(key)) {
             return null;
         }
+        V returnvalue = getHelper(key, node);
+        Node Pnode = gotoparentnode(root, node, key);
+        if (Pnode == null) {
+            //delete root which is a hard thing
+            Node lnode = gotoleft(node);
+            if (lnode.left != null) {
+                Node PLnode = gotoparentnode(root,lnode,lnode.key);
+                PLnode.right = lnode.left;
+            } else {
+                Node PLnode = gotoparentnode(root,lnode,lnode.key);
+                PLnode.right = null;
+            }
+            lnode.right = node.right;
+            lnode.left = node.left;
+            root = lnode;
+            size -= 1;
+            keyset.remove(key);
+            return returnvalue;
+        }
 
-        //Node node = find(root, key);
-        return getHelper(key, node);
-        //throw new UnsupportedOperationException();
+
+
+        if (Pnode.right == node) {
+            LR = 1;
+        }
+        if (node.left != null && node.right != null){
+            Node lnode = gotoleft(node);
+            if (lnode.left != null) {
+                Node PLnode = gotoparentnode(root,lnode,lnode.key);
+                PLnode.right = lnode.left;
+            } else {
+                Node PLnode = gotoparentnode(root,lnode,lnode.key);
+                if (PLnode != node) {
+                    PLnode.right = null;
+                }
+            }
+            lnode.right = node.right;
+            if (node.left != lnode) {
+                lnode.left = node.left;
+
+            }
+            if (LR == 0) { Pnode.left = lnode;
+            } else { Pnode.right = lnode;}
+            System.out.println("hello");
+
+        } else if (node.left == null && node.right != null) {
+            if (LR == 0) { Pnode.left = node.right;
+            } else { Pnode.right = node.right;}
+        } else if (node.left != null && node.right == null) {
+            if (LR == 0) { Pnode.left = node.left;
+            } else { Pnode.right = node.left;}
+        } else {
+            if (LR == 0) { Pnode.left = null;
+            } else { Pnode.right = null;}
+        }
+        size -= 1;
+        keyset.remove(key);
+        return returnvalue;
     }
 
     /** Removes the key-value entry for the specified key only if it is
@@ -189,13 +282,10 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     @Override
     public V remove(K key, V value) {
         if (get(key).equals(value)) {
-            remove(key);
-            return value;
+            return remove(key);
         } else {
             return null;
         }
-        //throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -222,15 +312,33 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     }
 
+//    public static void main(String[] args) {
+//        BSTMap<Integer,String> BStree = new BSTMap<>();
+//        BStree.put(1, "Hello");
+//        BStree.put(2, "World");
+//        BStree.put(3, "!");
+//
+//        for (Integer element : BStree) {
+//            System.out.println(element);
+//        }
+//    }
+
     public static void main(String[] args) {
-        BSTMap<Integer,String> BStree = new BSTMap<>();
-        BStree.put(1, "Hello");
-        BStree.put(2, "World");
-        BStree.put(3, "!");
-
-        for (Integer element : BStree) {
-            System.out.println(element);
-        }
+        BSTMap<String, Integer> bstmap = new BSTMap<>();
+        bstmap.put("hello", 5);
+        System.out.println(bstmap.get("hello"));
+        bstmap.put("cat", 10);
+        bstmap.put("fish", 22);
+        bstmap.put("zebra", 90);
+        bstmap.put("apple", 1);
+        bstmap.put("batman", 2);
+        bstmap.put("catman", 2);
+        bstmap.put("datman", 2);
+        bstmap.put("eatman", 2);
+        bstmap.put("fatman", 2);
+        bstmap.remove("cat");
+        //System.out.println(bstmap.gotoleft(bstmap.root).key);
+        System.out.println(bstmap.get("hello"));
+        System.out.println(bstmap.get("hello1"));
     }
-
 }
