@@ -57,9 +57,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     @Override
     public V get(K key) {
         int index = Math.floorMod(hash(key), DEFAULT_SIZE);
-//        for (K stuff : buckets[index]) {
-//
-//        }
         if (buckets[index].size == 0) {
             return null;
         } else {

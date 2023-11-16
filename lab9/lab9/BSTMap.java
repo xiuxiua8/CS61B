@@ -47,7 +47,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     private Node go(Node node, K key) {
         if (key.compareTo(node.key) < 0) {
             return node.left;
-        } else if (key.compareTo(node.key) > 0){
+        } else if (key.compareTo(node.key) > 0) {
             return node.right;
         } else {
             return null;
@@ -55,7 +55,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
     /** go to the right node, then return that node
      * */
-    private Node gotothebottom (Node node, K key) {
+    private Node gotothebottom(Node node, K key) {
         Node ndptr = node;
         while (go(ndptr, key) != null) {
             ndptr = gotothebottom(go(ndptr, key), key);
@@ -64,7 +64,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return ndptr;
     }
 
-    private Node gotoparentnode (Node node, Node cnode, K key) {
+    private Node gotoparentnode(Node node, Node cnode, K key) {
         Node ndptr = node;
         while (go(ndptr, key) != cnode) {
             if (go(ndptr, key) == null) {
@@ -76,7 +76,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return ndptr;
     }
 
-    private Node gotoleft (Node node) {
+    private Node gotoleft(Node node) {
         Node ndptr = node.left;
         if (ndptr == null) {
             return null;
@@ -88,7 +88,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
     }
 
-    private Node gotoright (Node node) {
+    private Node gotoright(Node node) {
         Node ndptr = node.right;
         if (ndptr == null) {
             return null;
@@ -147,7 +147,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (p == null) {
             p = new Node(key, value);
             return p;
-        } else if (key.compareTo(p.key) == 0){
+        } else if (key.compareTo(p.key) == 0) {
             //Node node = go(p, key);
             p.value = value;
             return p;
@@ -201,79 +201,55 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return keyset;
     }
 
+    /** Delete the instance of key from Node that is closest
+     *  to the root and return the modified tree. The nodes of
+     *  the original tree may be modified. */
+    public Node removehelper(Node node, K key) {
+        if (node == null) {
+            return null;
+        }
+        if (key.compareTo(node.key) < 0) {
+            node.left = removehelper(node.left, key);
+        } else if (key.compareTo(node.key) > 0) {
+            node.right = removehelper(node.right, key);
+        } else if (node.left == null) {
+            // Otherwise, we’ve found key
+            return node.right;
+        } else if (node.right == null) {
+            return node.left;
+        } else {
+            node.right = swapSmallest(node.right, node);
+        }
+        return node;
+    }
+
+    /** Move the label from the first node in node (in an inorder
+     *  traversal) to node R (over-writing the current label of R),
+     *  remove the first node of node from node, and return the resulting tree. */
+    private Node swapSmallest(Node node, Node R) {
+        if (node.left == null) {
+            R.key = node.key;
+            return node.right;
+        } else {
+            node.left = swapSmallest(node.left, R);
+            return node;
+        }
+    }
+
     /** Removes KEY from the tree if present
      *  returns VALUE removed,
      *  null on failed removal.
      */
     @Override
     public V remove(K key) {
-        int LR = 0;
-        if (root == null) {
+        if (removehelper(root, key) == null) {
             return null;
-        }
-        Node node = gotothebottom(root, key);
-        if (!node.key.equals(key)) {
-            return null;
-        }
-        V returnvalue = getHelper(key, node);
-        Node Pnode = gotoparentnode(root, node, key);
-        if (Pnode == null) {
-            //delete root which is a hard thing
-            Node lnode = gotoleft(node);
-            if (lnode.left != null) {
-                Node PLnode = gotoparentnode(root,lnode,lnode.key);
-                PLnode.right = lnode.left;
-            } else {
-                Node PLnode = gotoparentnode(root,lnode,lnode.key);
-                PLnode.right = null;
-            }
-            lnode.right = node.right;
-            lnode.left = node.left;
-            root = lnode;
-            size -= 1;
-            keyset.remove(key);
-            return returnvalue;
-        }
-
-
-
-        if (Pnode.right == node) {
-            LR = 1;
-        }
-        if (node.left != null && node.right != null){
-            Node lnode = gotoleft(node);
-            if (lnode.left != null) {
-                Node PLnode = gotoparentnode(root,lnode,lnode.key);
-                PLnode.right = lnode.left;
-            } else {
-                Node PLnode = gotoparentnode(root,lnode,lnode.key);
-                if (PLnode != node) {
-                    PLnode.right = null;
-                }
-            }
-            lnode.right = node.right;
-            if (node.left != lnode) {
-                lnode.left = node.left;
-
-            }
-            if (LR == 0) { Pnode.left = lnode;
-            } else { Pnode.right = lnode;}
-            System.out.println("hello");
-
-        } else if (node.left == null && node.right != null) {
-            if (LR == 0) { Pnode.left = node.right;
-            } else { Pnode.right = node.right;}
-        } else if (node.left != null && node.right == null) {
-            if (LR == 0) { Pnode.left = node.left;
-            } else { Pnode.right = node.left;}
-        } else {
-            if (LR == 0) { Pnode.left = null;
-            } else { Pnode.right = null;}
         }
         size -= 1;
         keyset.remove(key);
-        return returnvalue;
+        return removehelper(root, key).value;
     }
+
 
     /** Removes the key-value entry for the specified key only if it is
      *  currently mapped to the specified value.  Returns the VALUE removed,
@@ -312,16 +288,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     }
 
-//    public static void main(String[] args) {
-//        BSTMap<Integer,String> BStree = new BSTMap<>();
-//        BStree.put(1, "Hello");
-//        BStree.put(2, "World");
-//        BStree.put(3, "!");
-//
-//        for (Integer element : BStree) {
-//            System.out.println(element);
-//        }
-//    }
+
 
     public static void main(String[] args) {
         BSTMap<String, Integer> bstmap = new BSTMap<>();
@@ -342,3 +309,4 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         System.out.println(bstmap.get("hello1"));
     }
 }
+
